@@ -1,6 +1,10 @@
-## 3. Conditional Types, Type Mapping, Template Literals
+- [1. Conditional types](#1-conditional-types)
+- [2. Mapped types](#2-mapped-types)
+- [3. `DateProps<T>`](#3-datepropst)
+- [4. Fluent setters](#4-fluent-setters)
+- [5. Typesafe HTML query](#5-typesafe-html-query)
 
-## 1. Conditional types
+# 1. Conditional types
 
 Implement your own version of conditional types by using 
 
@@ -15,21 +19,21 @@ You can look up the spec from the official TypeScript website and of course in t
 - `AreEqual<T>`: returns true, if the types are exactly the same
 
 
-## 2. Mapped types
+# 2. Mapped types
 - `PartialReadOnly<T, Properties>`: only set those properties to readonly wihch keys are set in `Properties`
 - `PartialOptional<T>`: as `PartialReadOnly`, but for optional parameters
 
-## 3. `DateProps<T>`
+# 3. `DateProps<T>`
 
 Create a `DateProps` type. It should generate a type that fits to the `mapDate` function, you created in unit 1. It should map alle properties ending with "[dD]ate" to type `Date`.
 
 Also generate a function `mapDateProperties` that any passed object to type `DateProps`. Reuse your `mapDate`. For the implementation you can again use type assertion.
 
-## 4. Fluent setters
+# 4. Fluent setters
 
 Generate a new type that transforms all properties into a setter method. See the unit tests for details.
 
-## 5. Typesafe HTML query
+# 5. Typesafe HTML query
 
 Look at the example below. Should be self-explanatory. Something we wanted to have for ages...
 
@@ -45,5 +49,3 @@ safeQuery('div > p'); //should be never
 ```
 
 Don't think too complicated. Just make sure that the unit tests work and don't add any other features.
-
-## Spy examples
