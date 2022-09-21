@@ -12,7 +12,7 @@ type LocaleMaker<
   LANG extends string
 > = `${COUNTRY}-${LANG}`;
 
-type AT = LocaleMaker<"at", "de">;
+type AT = LocaleMaker<"at", "de">; // "at-de"
 type ENGLISH_COUNTRIES = LocaleMaker<"us" | "ca" | "gb", "en">;
 type CH = LocaleMaker<"ch", "de" | "fr" | "it">;
 type SWITZERLAND = LocaleMaker<"ch" | "ch", "de" | "fr" | "it" | "rm">;
@@ -90,6 +90,8 @@ const personFeature = createFeature(initialState);
 const entities: Observable<Person[]> = personFeature.selectEntities;
 const loading: Observable<boolean> = personFeature.selectLoading;
 
+// ## type safe DOM selector
+
 // # createAction
 
 type TypedAction<Type extends string, Payload> = {
@@ -115,3 +117,32 @@ function on<AT extends TypedAction<Type, P>, Type extends string, P>(
 ): void {}
 
 on(loadPerson, (state, { page }) => state);
+
+// 3 steps:
+// calcAge with birthday as string and date
+// calcAge with optional Date
+// call calcAge with union type and fix it
+// calcAge with different parameter names
+// add optional reference at the first one as well
+// refer to fixing that to the generic functions
+
+function calcAge(birthday: string): number;
+function calcAge(birthday: string, reference: string): number;
+function calcAge(birthday: Date): number;
+function calcAge(birthday: Date, reference: Date): number;
+
+function calcAge(birthday: Date | string, reference?: Date | string): number {
+  if (birthday instanceof Date) {
+    if (typeof reference === "string") {
+      throw "failure";
+    }
+    let now = reference ?? new Date();
+    return now.getTime() - birthday.getTime();
+  } else {
+    if (reference instanceof Date) {
+      throw "failure";
+    }
+    let now = reference ? new Date(reference) : new Date();
+    return now.getTime() - new Date(birthday).getTime();
+  }
+}

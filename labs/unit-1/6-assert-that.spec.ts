@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { assertThat } from "./assert-that";
+import { describe, it, expect } from "@jest/globals";
+import { assertThat } from "./6-assert-that";
 
 describe("assert that", () => {
   it("should compile", () => {
@@ -13,15 +13,15 @@ describe("assert that", () => {
   });
 
   it("should throw an error", () => {
-    expect(() => assertThat("This is a test").matches(/^[\w]+$/)).throws();
+    expect(() => assertThat("This is a test").matches(/^[\w]+$/)).toThrow();
 
-    expect(() => assertThat(5).isBetween(5, 6)).throws();
+    expect(() => assertThat(5).isBetween(5, 6)).toThrow();
 
     expect(() =>
       assertThat({ street: "Domgasse", city: "Vienna" }).hasProperties({
         city: "Wien",
       })
-    ).throws();
+    ).toThrow();
   });
 
   it("should not compile", () => {
