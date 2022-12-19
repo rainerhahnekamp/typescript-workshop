@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test:lab-1": "vitest labs/01"
+    "run:playground": "tsc && node playground.js"
   },
   "author": "",
   "license": "ISC",
@@ -16,5 +16,8 @@
     "ts-jest": "^29.0.1",
     "typescript": "^4.9.4",
     "zod": "^3.20.2"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1"
   }
 }
