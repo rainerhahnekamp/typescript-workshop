@@ -22,4 +22,4 @@ done
 git checkout $branch
 git merge $current $branch -m merge
 
-git checkout master
+git checkout main
