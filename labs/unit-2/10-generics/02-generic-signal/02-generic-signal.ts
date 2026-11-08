@@ -1,18 +1,19 @@
-// Generalize this Unit 1 Signal with a type parameter.
-// Preserve its closure, private brand and method syntax.
-const SIGNAL = Symbol("SIGNAL");
+const SIGNAL = Symbol("workshop.signal");
 
-export type Signal = (() => number) & { [SIGNAL]: true };
+type SignalNode = boolean;
 
-export type WritableSignal = Signal & {
-  set(value: number): void;
-  update(updater: (current: number) => number): void;
+export type Signal<T> = (() => T) & {
+  [SIGNAL]: SignalNode;
 };
 
-export function createSignal(initial: number): WritableSignal {
-  let _value = initial;
-  const node: WritableSignal = () => _value;
+export type WritableSignal<T> = Signal<T> & {
+  set(value: T): void;
+  update(updater: (current: T) => T): void;
+};
 
+export function createSignal<T>(initial: T): WritableSignal<T> {
+  let _value = initial;
+  const node: WritableSignal<T> = () => _value;
   node[SIGNAL] = true;
   node.set = (value) => (_value = value);
   node.update = (updater) => (_value = updater(_value));

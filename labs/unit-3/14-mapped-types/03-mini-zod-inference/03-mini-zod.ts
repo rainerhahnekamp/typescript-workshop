@@ -1,4 +1,4 @@
-/** The completed Unit 2 Mini-Zod implementation. */
+/** Mini-Zod after inferring object output in Exercise 14.3. */
 export interface Schema<T = unknown> {
   parse(value: unknown): T;
 }
@@ -42,7 +42,6 @@ export const z = {
     };
   },
 
-  // Supplied date parser for the optional-schema exercise.
   date(): Schema<Date> {
     return {
       parse(value) {
@@ -60,8 +59,7 @@ export const z = {
     };
   },
 
-  // TODO: Infer the output object type from the field schemas.
-  object(shape: Shape): Schema {
+  object<S extends Shape>(shape: S): ObjectSchema<S> {
     return {
       parse: (value) => {
         const isObject =
@@ -80,7 +78,7 @@ export const z = {
           {},
         );
       },
-    };
+    } as ObjectSchema<S>;
   },
 };
 
@@ -95,3 +93,7 @@ export function optional<T>(schema: Schema<T>): Schema<T | undefined> {
     },
   };
 }
+
+type ObjectSchema<S extends Shape> = Schema<{
+  [Prop in keyof S]: S[Prop] extends Schema<infer R> ? R : never;
+}>;

@@ -5,17 +5,22 @@ import type {
 
 export type StoredCar = Car & { vin: string };
 
-// TODO: Select the editable fields, then make them optional for the form.
-export type VehicleDraft = Partial<StoredCar>;
+export type VehicleDraft = Partial<Pick<StoredCar, "brand" | "mileage">>;
 
-// TODO: Both editable fields must be present when saving.
-export type SaveVehicle = VehicleDraft;
+export type SaveVehicle = Required<VehicleDraft>;
 
 export function saveVehicle(
   car: StoredCar,
   draft: VehicleDraft,
   updateCar: typeof update,
 ): StoredCar {
-  // TODO: Fill missing fields from the car and pass the changes to updateCar.
-  return car;
+  const changes: SaveVehicle = {
+    brand: draft.brand ?? car.brand,
+    mileage: draft.mileage ?? car.mileage,
+  };
+  const updated = updateCar(car, (current) => {
+    current.brand = changes.brand;
+    current.mileage = changes.mileage;
+  });
+  return { ...updated, vin: car.vin };
 }

@@ -1,7 +1,8 @@
 import { z, type Shape } from "./05-mini-zod";
 
-// TODO: Preserve the concrete shape returned by the definition.
-export function defineSchema(definition: (builder: typeof z) => Shape) {
+export function defineSchema<S extends Shape>(
+  definition: (builder: typeof z) => S,
+) {
   const schema = z.object(definition(z));
   return [schema.parse, z.array(schema).parse] as const;
 }

@@ -6,10 +6,13 @@ export type RawEvent = {
   };
 };
 
-// TODO: Replace eventDate in RawEvent["event"], then replace event in RawEvent.
-export type ParsedEvent = RawEvent;
+export type ParsedEvent = Omit<RawEvent, "event"> & {
+  event: Omit<RawEvent["event"], "eventDate"> & { eventDate: Date };
+};
 
 export function parseEvent(raw: RawEvent): ParsedEvent {
-  // TODO: Construct a new event with a Date at event.eventDate.
-  return raw;
+  return {
+    ...raw,
+    event: { ...raw.event, eventDate: new Date(raw.event.eventDate) },
+  };
 }

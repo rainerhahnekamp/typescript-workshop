@@ -59,9 +59,16 @@ export const z = {
     };
   },
 
-  array(schema: Schema): Schema {
-    // TODO: Validate the array, parse each item and preserve the item type.
-    throw new Error("Implement z.array");
+  array<T>(schema: Schema<T>): Schema<T[]> {
+    return {
+      parse(value) {
+        if (!Array.isArray(value)) {
+          throw new TypeError();
+        }
+
+        return Array.from(value, (item) => schema.parse(item));
+      },
+    };
   },
 
   object<S extends Shape>(shape: S): ObjectSchema<S> {

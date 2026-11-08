@@ -1,4 +1,8 @@
-// Use descriptors to lock existing own properties. Keep the operation shallow.
-export function freeze(object: object): void {
-  throw new Error("Implement freeze");
+export function freeze(object: object) {
+  for (const key of Reflect.ownKeys(object)) {
+    Object.defineProperty(object, key, {
+      writable: false,
+      configurable: false,
+    });
+  }
 }

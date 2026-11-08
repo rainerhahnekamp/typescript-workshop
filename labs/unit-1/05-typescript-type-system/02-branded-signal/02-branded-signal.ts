@@ -1,5 +1,5 @@
-// Add a private symbol brand to Signal.
-export type Signal = () => number;
+const SIGNAL = Symbol("SIGNAL");
+export type Signal = (() => number) & { [SIGNAL]: true };
 
 export type WritableSignal = Signal & {
   set(value: number): void;
@@ -7,5 +7,12 @@ export type WritableSignal = Signal & {
 };
 
 export function createSignal(initial: number): WritableSignal {
-  throw new Error("Implement createSignal");
+  let _value = initial;
+  const node: WritableSignal = () => _value;
+
+  node[SIGNAL] = true;
+  node.set = (value) => (_value = value);
+  node.update = (updater) => (_value = updater(_value));
+
+  return node;
 }

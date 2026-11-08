@@ -12,10 +12,17 @@ type HasDigits<
     ? HasDigits<Rest, Count, [...Seen, unknown]>
     : false;
 
-// TODO: Split the string and check for exactly four, two, and two digits.
-type IsDateText<Value extends string> = boolean;
+type IsDateText<Value extends string> =
+  Value extends `${infer Year}-${infer Month}-${infer Day}`
+    ? HasDigits<Year, 4> extends true
+      ? HasDigits<Month, 2> extends true
+        ? HasDigits<Day, 2>
+        : false
+      : false
+    : false;
 
-// TODO: Use IsDateText to constrain the argument and keep its literal type.
-export function dateText<Value extends string>(value: Value): Value {
+export function dateText<Value extends string>(
+  value: Value & (IsDateText<Value> extends true ? unknown : never),
+): Value {
   return value;
 }

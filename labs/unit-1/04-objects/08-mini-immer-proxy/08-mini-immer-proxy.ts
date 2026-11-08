@@ -1,4 +1,3 @@
-// Supplied type: focus on runtime property behavior, not generic typing.
 export type Car = {
   brand: string;
   mileage: number;
@@ -8,8 +7,29 @@ export type Car = {
   };
 };
 
-// Build a draft with Proxy get and set traps.
-// Support synchronous edits to existing top-level properties.
 export function update(car: Car, change: (draft: Car) => void): Car {
-  throw new Error("Implement update with Proxy");
+  const copy: Car = { ...car };
+  let hasChanged = false;
+  const draft = new Proxy(copy, {
+    get(target, key, receiver) {
+      return Reflect.get(target, key, receiver);
+    },
+    set(target, key, value) {
+      const descriptor = Reflect.getOwnPropertyDescriptor(car, key);
+      if (
+        descriptor?.writable === false ||
+        (descriptor?.get && descriptor.set === undefined)
+      ) {
+        throw new Error("Readonly Object");
+      }
+      if (!Object.is(Reflect.get(target, key), value)) {
+        Reflect.set(target, key, value);
+        hasChanged = true;
+      }
+      return true;
+    },
+  });
+
+  change(draft);
+  return hasChanged ? copy : car;
 }

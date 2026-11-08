@@ -1,4 +1,4 @@
-export type ElementOf<T> = unknown;
+export type ElementOf<T> = T extends (infer Item)[] ? Item : never;
 
 type A = ElementOf<string[]>; // string
-type B = ElementOf<boolean>; // never
+type B = ElementOf<boolean>;          // never

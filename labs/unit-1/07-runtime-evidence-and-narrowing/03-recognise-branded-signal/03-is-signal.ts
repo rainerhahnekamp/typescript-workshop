@@ -1,4 +1,3 @@
-// Supplied Signal implementation from Chapter 5. Implement only isSignal below.
 const SIGNAL = Symbol("SIGNAL");
 export type Signal = (() => number) & { [SIGNAL]: true };
 
@@ -18,7 +17,6 @@ export function createSignal(initial: number): WritableSignal {
   return node;
 }
 
-// Add a type predicate signature and the runtime check for the private marker.
-export function isSignal(value: unknown): boolean {
-  throw new Error("Implement isSignal");
+export function isSignal(value: unknown): value is Signal {
+  return typeof value === "function" && SIGNAL in value;
 }

@@ -1,5 +1,6 @@
-export function getMessage(action: () => void) {
-  return action() ?? "Done";
+export function getMessage(action: () => void): string {
+  action();
+  return "Done";
 }
 
 const message = getMessage(() => 42);

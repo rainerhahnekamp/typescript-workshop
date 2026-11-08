@@ -1,4 +1,4 @@
-export interface City {
+export type City = {
   area: number;
   population: number;
   country: string;

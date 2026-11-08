@@ -4,8 +4,13 @@ interface NestedShape {
   [key: string]: Schema | NestedShape;
 }
 
-// TODO: Map each field to the output of a schema or a nested shape.
-type ParsedNestedShape<S extends NestedShape> = Record<string, unknown>;
+type ParsedNestedShape<S extends NestedShape> = {
+  [Key in keyof S]: S[Key] extends Schema<infer Output>
+    ? Output
+    : S[Key] extends NestedShape
+      ? ParsedNestedShape<S[Key]>
+      : never;
+};
 
 function isSchema(field: Schema | NestedShape): field is Schema {
   return typeof field.parse === "function";

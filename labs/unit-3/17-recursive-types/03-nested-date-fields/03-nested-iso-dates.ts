@@ -17,8 +17,13 @@ function parseDate(value: unknown): Date {
   return date;
 }
 
-// TODO: Match keys ending in date or Date and recurse into nested records.
-export type ParsedDates<Input> = Input;
+export type ParsedDates<Input> = {
+  [Key in keyof Input]: Key extends `${string}date` | `${string}Date`
+    ? Date
+    : Input[Key] extends DataRecord
+      ? ParsedDates<Input[Key]>
+      : Input[Key];
+};
 
 function convertRecord(input: DataRecord): Record<string, unknown> {
   return Object.fromEntries(

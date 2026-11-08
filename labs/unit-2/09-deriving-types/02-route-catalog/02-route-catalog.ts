@@ -3,10 +3,9 @@ export const ROUTES = {
   health: { path: "/health", access: "public" },
 } as const;
 
-// Derive these types from ROUTES. Keep the catalog and helper bodies unchanged.
-export type RouteName = unknown;
-export type Route = unknown;
-export type RoutePath = unknown;
+export type RouteName = keyof typeof ROUTES;
+export type Route = (typeof ROUTES)[RouteName];
+export type RoutePath = Route["path"];
 
 export function getRoute(name: RouteName): Route {
   return ROUTES[name];

@@ -6,9 +6,10 @@ export interface Vehicle {
 }
 
 // Require one label per status, with no arbitrary string keys.
-export const labels: Record<string, string> = {
+export const labels: Record<Status, string> = {
   ready: "Ready",
   delayed: "Delayed",
+  "quality-hold": "Quality hold",
 };
 
 export function describeVehicle(
@@ -16,6 +17,11 @@ export function describeVehicle(
   vin: string,
 ): string {
   const vehicle = vehicles[vin];
+  const vins = Object.keys(vehicles);
+
+  if (!vins.includes(vin) || vehicle === undefined) {
+    return "Vehicle not found";
+  }
   return `${vehicle.vin}: ${labels[vehicle.status]}`;
 }
 
@@ -24,5 +30,8 @@ export function describeVehicleMap(
   vin: string,
 ): string {
   const vehicle = vehicles.get(vin);
+  if (!vehicle) {
+    return "Vehicle not found";
+  }
   return `${vehicle.vin}: ${labels[vehicle.status]}`;
 }

@@ -15,16 +15,14 @@
  * Keep Shape and z.object unchanged from Unit 1. Object parse results remain
  * unknown; inferring their individual properties is a later topic.
  */
-// TODO 1: Add an output type parameter (defaulting to unknown) and use it below.
-export interface Schema {
-  parse(value: unknown): unknown;
+export interface Schema<T = unknown> {
+  parse(value: unknown): T;
 }
 
 export type Shape = Record<string, Schema>;
 
-// TODO 2: Preserve the output types of string, number, boolean and date.
 export const z = {
-  string(): Schema {
+  string(): Schema<string> {
     return {
       parse: (value) => {
         if (typeof value === "string") {
@@ -36,7 +34,7 @@ export const z = {
     };
   },
 
-  number(): Schema {
+  number(): Schema<number> {
     return {
       parse: (value) => {
         if (typeof value === "number" && Number.isFinite(value)) {
@@ -48,7 +46,7 @@ export const z = {
     };
   },
 
-  boolean(): Schema {
+  boolean(): Schema<boolean> {
     return {
       parse: (value) => {
         if (typeof value === "boolean") {
@@ -61,7 +59,7 @@ export const z = {
   },
 
   // Supplied date parser for the optional-schema exercise.
-  date(): Schema {
+  date(): Schema<Date> {
     return {
       parse(value) {
         if (value instanceof Date && !Number.isNaN(value.getTime())) {
@@ -102,12 +100,14 @@ export const z = {
   },
 };
 
-// TODO 3: Make optional generic, preserve the output type, and accept undefined.
-export function optional(schema: Schema): Schema {
+export function optional<T>(schema: Schema<T>): Schema<T | undefined> {
   return {
     parse(value) {
-      // TODO: Accept undefined and delegate other values to schema.
-      throw new Error("Implement optional");
+      if (value === undefined) {
+        return value;
+      }
+
+      return schema.parse(value);
     },
   };
 }

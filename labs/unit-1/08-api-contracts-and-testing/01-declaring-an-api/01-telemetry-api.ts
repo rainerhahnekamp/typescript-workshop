@@ -19,6 +19,14 @@ export interface FleetSummary {
   totalReadings: number;
 }
 
-// Declare parseTelemetry, summarizeTelemetry and formatSummary here.
-// Use export declare function, parameter types and explicit return types.
-// Do not implement CSV parsing, aggregation or report formatting.
+export declare function parseTelemetry(csv: string): TelemetryReading[];
+
+export declare function summarizeTelemetry(
+  readings: readonly TelemetryReading[],
+  options?: SummaryOptions,
+): FleetSummary;
+
+export declare function formatSummary(
+  summary: FleetSummary,
+  format: "text" | "csv",
+): string;

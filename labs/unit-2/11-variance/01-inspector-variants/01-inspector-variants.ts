@@ -1,37 +1,38 @@
 export type Vehicle = { vin: string };
 export type ElectricVehicle = Vehicle & { charge: number };
 
-// Design each inspect signature so the supplied assignment checks pass.
-// Use T in the signature, keep inspect as the only member, and do not add
-// variance annotations, any, assertions or extra members.
 export interface InspectorA<T> {
-  inspect: unknown;
+  inspect: () => T;
 }
 
 export interface InspectorB<T> {
-  inspect: unknown;
+  inspect: (value: T) => void;
 }
 
 export interface InspectorC<T> {
-  inspect: unknown;
+  inspect(value: T): void;
 }
 
 export interface InspectorD<T> {
-  inspect: unknown;
+  inspect: (value: T) => T;
 }
 
 export function createInspectorA<T>(value: T): InspectorA<T> {
-  throw new Error("Implement createInspectorA");
+  return { inspect: () => value };
 }
 
 export function createInspectorB<T>(report: (value: T) => void): InspectorB<T> {
-  throw new Error("Implement createInspectorB");
+  return { inspect: value => report(value) };
 }
 
 export function createInspectorC<T>(report: (value: T) => void): InspectorC<T> {
-  throw new Error("Implement createInspectorC");
+  return {
+    inspect(value) {
+      report(value);
+    },
+  };
 }
 
 export function createInspectorD<T>(review: (value: T) => T): InspectorD<T> {
-  throw new Error("Implement createInspectorD");
+  return { inspect: value => review(value) };
 }

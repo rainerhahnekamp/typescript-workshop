@@ -1,12 +1,12 @@
 export function createSerializers() {
-  const serializers: Record<string, (value: unknown) => string> = {};
+  const serializers: Record<string, (value: never) => string> = {};
 
-  function registerSerializer(type: string, fn: (value: unknown) => string) {
+  function registerSerializer(type: string, fn: (value: never) => string) {
     serializers[type] = fn;
   }
 
   function serialize(value: unknown) {
-    return serializers[typeof value]?.(value) ?? "";
+    return serializers[typeof value]?.(value as never) ?? "";
   }
 
   return { registerSerializer, serialize };

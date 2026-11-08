@@ -1,3 +1,5 @@
-export type Expect<Value> = unknown;
-export type AreEqual<A, B> = unknown;
-export type Not<Value> = unknown;
+export type Expect<Value extends true> = Value;
+
+export type AreEqual<A, B> = A extends B ? (B extends A ? true : false) : false;
+
+export type Not<Value extends boolean> = Value extends true ? false : true;

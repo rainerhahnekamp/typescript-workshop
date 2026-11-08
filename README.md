@@ -7,4 +7,4 @@ Install Node.js 24 and pnpm, then run `pnpm install` from this checkout.
 Open the exercise files under `labs/` and run the command shown in the
 learning platform from the repository root.
 
-Switch to the `solutions` branch for the reference implementations.
+This branch contains the reference implementations. Switch to `participants` for the starters.

@@ -8,22 +8,22 @@ export interface ViewConfig {
   onSelect: (vin: string) => void;
 }
 
-// This supplied API only checks the configuration's static contract.
 export function registerView(config: ViewConfig): void {}
 
-// Repair the declarations below. Keep the initial values and callback behavior.
-export const state = {
+export const state: { selected: string[]; status: Status } = {
   selected: [],
   status: "ready",
 };
 
+const sort: [Column, Direction] = ["mileage", "desc"];
+
 export const view = {
   title: "Fleet",
   columns: ["vin", "mileage"],
-  sort: ["mileage", "desc"],
+  sort,
   onSelect: vin => {
     state.selected.push(vin);
   },
-};
+} satisfies ViewConfig & { title: string };
 
 registerView(view);

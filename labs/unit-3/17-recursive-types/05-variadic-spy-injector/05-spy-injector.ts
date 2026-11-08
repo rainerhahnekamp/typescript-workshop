@@ -23,10 +23,11 @@ type Spy<T> = {
     : T[Key];
 };
 
-// TODO: Replace selected tuple positions with Spy<...> and keep the rest.
 type Injector<
   Spies extends readonly unknown[],
   Types extends readonly unknown[],
-> = Types;
+> = Types extends readonly [infer Head, ...infer Tail]
+  ? [Head extends Spies[number] ? Spy<Head> : Head, ...Injector<Spies, Tail>]
+  : [];
 
 export type { HttpClient, Injector, RouterService, Spy, UserService };

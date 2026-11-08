@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import {
   parseSync,
   type Comment,
@@ -155,13 +156,18 @@ function renderType(
       return `z.array(${renderType(node.elementType, source, comments, declarations, diagnostics)})`;
     case "TSTypeLiteral":
       return renderObject(
-        node.members as PropertyNode[],
+        node.members,
         source,
         comments,
         declarations,
         diagnostics,
       );
     case "TSLiteralType":
+      if (
+        node.literal.type === "TemplateLiteral" ||
+        node.literal.type === "UnaryExpression"
+      )
+        return unsupported(node, "Unsupported literal syntax", diagnostics);
       return `z.literal(${JSON.stringify(node.literal.value)})`;
     case "TSUnionType": {
       const literals = node.types.filter(isStringLiteralType);
@@ -252,7 +258,9 @@ function isStringLiteralType(
   type: TSType,
 ): type is TSLiteralType & { literal: { value: string } } {
   return (
-    type.type === "TSLiteralType" && typeof type.literal.value === "string"
+    type.type === "TSLiteralType" &&
+    type.literal.type === "Literal" &&
+    typeof type.literal.value === "string"
   );
 }
 
@@ -329,9 +337,8 @@ function tagsFor(
 ): Tags {
   const comment = comments
     .filter((candidate) => candidate.end <= node.start)
-    .findLast(
-      (candidate) => source.slice(candidate.end, node.start).trim() === "",
-    );
+    .reverse()
+    .find((candidate) => source.slice(candidate.end, node.start).trim() === "");
   const tags: Tags = new Map();
   if (!comment) return tags;
 

@@ -1,5 +1,8 @@
-// Implement the type using the accepted and rejected calls in the tests.
-export type FilterOptions = unknown;
+export type FilterOptions = {
+  label: string;
+} & (
+  | { value: string; onChange: (value: string) => void; defaultValue?: never }
+  | { defaultValue: string; value?: never; onChange?: (value: string) => void }
+);
 
-// Keep this supplied function unchanged; design its options type.
 export function configureFilter(options: FilterOptions): void {}

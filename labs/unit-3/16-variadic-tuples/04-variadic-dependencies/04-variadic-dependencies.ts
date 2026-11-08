@@ -3,7 +3,9 @@ export type Dependency<Value> = (value: Value) => unknown | Promise<unknown>;
 export type DependencyResults<
   Value,
   Dependencies extends readonly Dependency<Value>[],
-> = unknown[]; // TODO: Keep each dependency result at the same tuple position.
+> = {
+  [Index in keyof Dependencies]: Awaited<ReturnType<Dependencies[Index]>>;
+};
 
 export async function withDependencies<
   Value,
