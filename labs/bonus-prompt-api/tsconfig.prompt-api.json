@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true
+  },
+  "files": [
+    "07-prompt-api.d.ts",
+    "07-prompt-api-client.ts",
+    "07-prompt-api.type-tests.ts"
+  ]
+}

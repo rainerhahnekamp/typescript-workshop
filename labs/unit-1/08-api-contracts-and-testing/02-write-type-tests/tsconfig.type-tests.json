@@ -1,0 +1,4 @@
+{
+  "extends": "../01-declaring-an-api/tsconfig.declarations.json",
+  "include": ["../01-declaring-an-api/01-telemetry-api.ts", "02-telemetry-api.test-d.ts"]
+}

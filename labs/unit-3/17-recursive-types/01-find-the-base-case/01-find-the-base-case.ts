@@ -1,0 +1,4 @@
+export type Leaf<T> = T extends readonly (infer Item)[] ? Leaf<Item> : unknown;
+
+type A = Leaf<string[][]>; // string
+type B = Leaf<boolean>;    // boolean

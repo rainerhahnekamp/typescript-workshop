@@ -1,0 +1,6 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": { "noEmit": true },
+  "files": [],
+  "include": ["03-nested-iso-dates*.ts"]
+}

@@ -1,0 +1,6 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": { "noEmit": true, "types": [] },
+  "files": [],
+  "include": ["02-branded-signal*.ts"]
+}

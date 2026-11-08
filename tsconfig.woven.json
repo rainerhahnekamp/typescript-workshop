@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitReturns": true
+  },
+  "files": [],
+  "include": ["labs/woven/**/*.ts", "util/**/*.ts"],
+  "exclude": ["node_modules"]
+}

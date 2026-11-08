@@ -1,0 +1,6 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": { "noEmit": true, "types": [] },
+  "files": [],
+  "include": ["02-generic-signal.ts", "02-generic-signal.spec.ts", "02-generic-signal.test-d.ts"]
+}
