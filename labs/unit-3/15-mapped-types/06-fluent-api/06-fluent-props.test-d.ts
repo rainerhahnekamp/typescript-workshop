@@ -1,5 +1,5 @@
 import { describe, expectTypeOf, it } from "vitest";
-import type { FluentProps } from "./07-fluent-props";
+import type { FluentProps } from "./06-fluent-props";
 
 type Person = {
   id: number;

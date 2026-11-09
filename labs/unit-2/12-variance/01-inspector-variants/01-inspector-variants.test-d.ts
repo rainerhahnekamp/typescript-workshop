@@ -1,87 +1,76 @@
 import { describe, expectTypeOf, test } from "vitest";
-import {
-  type Vehicle,
-  type ElectricVehicle,
-  type InspectorA,
-  type InspectorB,
-  type InspectorC,
-  type InspectorD,
-  createInspectorA,
-  createInspectorB,
-  createInspectorC,
-  createInspectorD,
+import type {
+  ElectricVehicle,
+  Inspector,
+  Seller,
+  SpecializedInspector,
+  SpecializedSeller,
+  SwappableInspector,
+  Vehicle,
 } from "./01-inspector-variants";
 
-const electric: ElectricVehicle = { vin: "JT-1", charge: 80 };
-const vehicle: Vehicle = { vin: "JT-2" };
+declare const vehicle: Vehicle;
+declare const electricVehicle: ElectricVehicle;
+declare const vehicleSeller: Seller<Vehicle>;
+declare const electricVehicleSeller: Seller<ElectricVehicle>;
+declare const vehicleInspector: Inspector<Vehicle>;
+declare const electricVehicleInspector: Inspector<ElectricVehicle>;
+declare const swappableVehicleInspector: SwappableInspector<Vehicle>;
+declare const swappableElectricVehicleInspector: SwappableInspector<ElectricVehicle>;
+declare const specializedVehicleSeller: SpecializedSeller<Vehicle>;
+declare const specializedElectricVehicleSeller: SpecializedSeller<ElectricVehicle>;
+declare const specializedVehicleInspector: SpecializedInspector<Vehicle>;
+declare const specializedElectricVehicleInspector: SpecializedInspector<ElectricVehicle>;
 
-describe("inspector variants", () => {
-  test("A can be widened from electric vehicles to vehicles, but not narrowed", () => {
-    const electricInspector = createInspectorA<ElectricVehicle>(electric);
-    const vehicleInspector = createInspectorA<Vehicle>(vehicle);
+describe("vehicle sellers and inspectors", () => {
+  test("1. an EV seller can fill a general vehicle seller's role", () => {
+    const generalSeller: Seller<Vehicle> = electricVehicleSeller;
+    // @ts-expect-error A general seller cannot promise an electric vehicle.
+    const electricSeller: Seller<ElectricVehicle> = vehicleSeller;
 
-    const wider: InspectorA<Vehicle> = electricInspector;
-    // @ts-expect-error A vehicle-producing inspector cannot promise an EV result.
-    const narrower: InspectorA<ElectricVehicle> = vehicleInspector;
-
-    expectTypeOf(electricInspector.inspect).parameters.toEqualTypeOf<[]>();
-    expectTypeOf(electricInspector.inspect()).toEqualTypeOf<ElectricVehicle>();
-    expectTypeOf(wider.inspect()).toEqualTypeOf<Vehicle>();
+    expectTypeOf(electricVehicleSeller.sell).toEqualTypeOf<() => ElectricVehicle>();
+    expectTypeOf(generalSeller.sell()).toEqualTypeOf<Vehicle>();
   });
 
-  test("B can be narrowed from vehicles to electric vehicles, but not widened", () => {
-    const electricInspector = createInspectorB<ElectricVehicle>(value => {
-      value.charge.toFixed();
-    });
-    const vehicleInspector = createInspectorB<Vehicle>(value => {
-      value.vin.toUpperCase();
-    });
+  test("2. a general inspector can take an EV-only job", () => {
+    const electricInspector: Inspector<ElectricVehicle> = vehicleInspector;
+    // @ts-expect-error An EV-only inspector cannot take every vehicle.
+    const generalInspector: Inspector<Vehicle> = electricVehicleInspector;
 
-    const narrower: InspectorB<ElectricVehicle> = vehicleInspector;
-    // @ts-expect-error An EV-only inspector cannot accept every vehicle.
-    const wider: InspectorB<Vehicle> = electricInspector;
-
-    expectTypeOf(electricInspector.inspect).parameters.toEqualTypeOf<[value: ElectricVehicle]>();
-    expectTypeOf(electricInspector.inspect).returns.toEqualTypeOf<void>();
-    narrower.inspect(electric);
-    // @ts-expect-error The narrowed API only accepts electric vehicles.
-    narrower.inspect(vehicle);
-  });
-
-  test("C permits both assignment directions while keeping a typed inspect parameter", () => {
-    const electricInspector = createInspectorC<ElectricVehicle>(value => {
-      value.charge.toFixed();
-    });
-    const vehicleInspector = createInspectorC<Vehicle>(value => {
-      value.vin.toUpperCase();
-    });
-
-    const wider: InspectorC<Vehicle> = electricInspector;
-    const narrower: InspectorC<ElectricVehicle> = vehicleInspector;
-
-    expectTypeOf(electricInspector.inspect).parameters.toEqualTypeOf<[value: ElectricVehicle]>();
-    expectTypeOf(electricInspector.inspect).returns.toEqualTypeOf<void>();
-    expectTypeOf(wider.inspect).parameters.toEqualTypeOf<[value: Vehicle]>();
-    expectTypeOf(narrower.inspect).parameters.toEqualTypeOf<[value: ElectricVehicle]>();
-    // @ts-expect-error Both assignments are allowed, but the original parameter stays specific.
+    expectTypeOf(vehicleInspector.inspect).toEqualTypeOf<(vehicle: Vehicle) => void>();
+    expectTypeOf(electricInspector.inspect).toEqualTypeOf<(vehicle: ElectricVehicle) => void>();
+    electricInspector.inspect(electricVehicle);
+    // @ts-expect-error The EV role accepts electric vehicles.
     electricInspector.inspect(vehicle);
   });
 
-  test("D permits neither assignment direction because it accepts and returns T", () => {
-    const electricInspector = createInspectorD<ElectricVehicle>(value => ({
-      ...value,
-      charge: Math.min(100, value.charge),
-    }));
-    const vehicleInspector = createInspectorD<Vehicle>(value => value);
+  test("3. the compiler allows both inspector swaps", () => {
+    const generalInspector: SwappableInspector<Vehicle> = swappableElectricVehicleInspector;
+    const electricInspector: SwappableInspector<ElectricVehicle> = swappableVehicleInspector;
 
-    // @ts-expect-error Widening would allow a non-electric input.
-    const wider: InspectorD<Vehicle> = electricInspector;
-    // @ts-expect-error Narrowing would promise an electric output the source cannot guarantee.
-    const narrower: InspectorD<ElectricVehicle> = vehicleInspector;
+    expectTypeOf(generalInspector.inspect).toEqualTypeOf<(vehicle: Vehicle) => void>();
+    expectTypeOf(electricInspector.inspect).toEqualTypeOf<(vehicle: ElectricVehicle) => void>();
+    generalInspector.inspect(vehicle);
+    electricInspector.inspect(electricVehicle);
+    // @ts-expect-error The original EV inspector still expects an electric vehicle.
+    swappableElectricVehicleInspector.inspect(vehicle);
+  });
 
-    expectTypeOf(electricInspector.inspect).parameters.toEqualTypeOf<[value: ElectricVehicle]>();
-    expectTypeOf(electricInspector.inspect(electric)).toEqualTypeOf<ElectricVehicle>();
-    // @ts-expect-error The input must also be an electric vehicle.
-    electricInspector.inspect(vehicle);
+  test("4. each specialized role rejects swaps in either direction", () => {
+    // @ts-expect-error Keep the seller's electric specialization.
+    const generalSeller: SpecializedSeller<Vehicle> = specializedElectricVehicleSeller;
+    // @ts-expect-error Keep the seller's general specialization.
+    const electricSeller: SpecializedSeller<ElectricVehicle> = specializedVehicleSeller;
+    // @ts-expect-error Keep the inspector's electric specialization.
+    const generalInspector: SpecializedInspector<Vehicle> = specializedElectricVehicleInspector;
+    // @ts-expect-error Keep the inspector's general specialization.
+    const electricInspector: SpecializedInspector<ElectricVehicle> = specializedVehicleInspector;
+
+    expectTypeOf<keyof SpecializedSeller<Vehicle>>().toEqualTypeOf<"sell">();
+    expectTypeOf<keyof SpecializedInspector<Vehicle>>().toEqualTypeOf<"inspect">();
+    expectTypeOf(specializedVehicleSeller.sell).toEqualTypeOf<() => Vehicle>();
+    expectTypeOf(specializedElectricVehicleSeller.sell).toEqualTypeOf<() => ElectricVehicle>();
+    expectTypeOf(specializedVehicleInspector.inspect).toEqualTypeOf<(vehicle: Vehicle) => void>();
+    expectTypeOf(specializedElectricVehicleInspector.inspect).toEqualTypeOf<(vehicle: ElectricVehicle) => void>();
   });
 });

@@ -1,5 +1,5 @@
 import { describe, expectTypeOf, it } from "vitest";
-import type { PartialOptional, PartialReadOnly } from "./06-mapped-utility-types";
+import type { PartialOptional, PartialReadOnly } from "./05-mapped-utility-types";
 
 type Person = {
   id: number;

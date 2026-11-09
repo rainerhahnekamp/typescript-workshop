@@ -1,41 +1,27 @@
 export type Vehicle = { vin: string };
 export type ElectricVehicle = Vehicle & { charge: number };
 
-// Design each inspect signature so the supplied assignment checks pass.
-// Use T in the signature, keep inspect as the only member, and do not add
-// variance annotations, any, assertions or extra members.
-export interface InspectorA<T> {
+// 1. A seller hands a vehicle to the customer.
+export interface Seller<T> {
+  sell: unknown;
+}
+
+// 2. An inspector receives a vehicle from the customer.
+export interface Inspector<T> {
   inspect: unknown;
 }
 
-export interface InspectorB<T> {
+// 3. The two inspector roles should be assignable in both directions.
+export interface SwappableInspector<T> {
   inspect: unknown;
 }
 
-export interface InspectorC<T> {
+// 4. Each role must keep its exact specialization when compared with
+// another instantiation of the same generic type.
+export interface SpecializedSeller<T> {
+  sell: unknown;
+}
+
+export interface SpecializedInspector<T> {
   inspect: unknown;
-}
-
-export interface InspectorD<T> {
-  inspect: unknown;
-}
-
-export function createInspectorA<T>(value: T): InspectorA<T> {
-  return { inspect: () => value };
-}
-
-export function createInspectorB<T>(report: (value: T) => void): InspectorB<T> {
-  return { inspect: (value: T) => report(value) };
-}
-
-export function createInspectorC<T>(report: (value: T) => void): InspectorC<T> {
-  return {
-    inspect: (value: T) => {
-      report(value);
-    },
-  };
-}
-
-export function createInspectorD<T>(review: (value: T) => T): InspectorD<T> {
-  return { inspect: (value: T) => review(value) };
 }
