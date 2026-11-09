@@ -9,7 +9,6 @@
     "test:labs:unit-1": "vitest run labs/unit-1",
     "test:labs:unit-2": "vitest run labs/unit-2 --typecheck",
     "test:labs:unit-3": "vitest run labs/unit-3 --typecheck",
-    "test:labs:bonus-oxc": "vitest run labs/bonus-oxc --typecheck",
     "check:lab": "node scripts/check-lab.mjs"
   },
   "author": "",
@@ -24,7 +23,6 @@
   },
   "devDependencies": {
     "@types/node": "26.6.4",
-    "oxc-parser": "0.155.0",
     "ts-node": "^10.9.1",
     "vite": "7.3.6",
     "vitest": "5.0.0"

@@ -1,7 +1,7 @@
 import { defineConfig } from "vitest/config";
 
 const vehicleRegistry =
-  "labs/unit-1/06-describing-and-comparing-types/03-vehicle-registry";
+  "labs/unit-1/07-describing-and-comparing-types/03-vehicle-registry";
 
 function testProject(
   name: string,
@@ -47,7 +47,7 @@ export default defineConfig({
   test: {
     typecheck: { enabled: true },
     projects: [
-      testProject("exercises", ["labs/unit-*", "labs/bonus-*"], "tsconfig.json", [
+      testProject("exercises", ["labs/unit-*"], "tsconfig.json", [
         `${vehicleRegistry}/**`,
       ]),
       testProject(
@@ -55,7 +55,7 @@ export default defineConfig({
         [vehicleRegistry],
         `${vehicleRegistry}/tsconfig.vehicle-registry.json`,
       ),
-      testProject("woven", ["labs/woven"], "tsconfig.woven.json"),
+      testProject("woven", ["extras/woven"], "tsconfig.woven.json"),
     ],
   },
 });

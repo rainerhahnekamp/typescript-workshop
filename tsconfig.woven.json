@@ -7,6 +7,6 @@
     "noImplicitReturns": true
   },
   "files": [],
-  "include": ["labs/woven/**/*.ts", "util/**/*.ts"],
+  "include": ["extras/woven/**/*.ts", "util/**/*.ts"],
   "exclude": ["node_modules"]
 }
