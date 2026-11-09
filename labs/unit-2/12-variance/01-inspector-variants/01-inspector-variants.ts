@@ -1,38 +1,27 @@
 export type Vehicle = { vin: string };
 export type ElectricVehicle = Vehicle & { charge: number };
 
-export interface InspectorA<T> {
-  inspect: () => T;
+// 1. A seller hands a vehicle to the customer.
+export interface Seller<T> {
+  sell: () => T;
 }
 
-export interface InspectorB<T> {
-  inspect: (value: T) => void;
+// 2. An inspector receives a vehicle from the customer.
+export interface Inspector<T> {
+  inspect: (vehicle: T) => void;
 }
 
-export interface InspectorC<T> {
-  inspect(value: T): void;
+// 3. The two inspector roles should be assignable in both directions.
+export interface SwappableInspector<T> {
+  inspect(vehicle: T): void;
 }
 
-export interface InspectorD<T> {
-  inspect: (value: T) => T;
+// 4. Each role must keep its exact specialization when compared with
+// another instantiation of the same generic type.
+export interface SpecializedSeller<in out T> {
+  sell: () => T;
 }
 
-export function createInspectorA<T>(value: T): InspectorA<T> {
-  return { inspect: () => value };
-}
-
-export function createInspectorB<T>(report: (value: T) => void): InspectorB<T> {
-  return { inspect: (value: T) => report(value) };
-}
-
-export function createInspectorC<T>(report: (value: T) => void): InspectorC<T> {
-  return {
-    inspect: (value: T) => {
-      report(value);
-    },
-  };
-}
-
-export function createInspectorD<T>(review: (value: T) => T): InspectorD<T> {
-  return { inspect: (value: T) => review(value) };
+export interface SpecializedInspector<in out T> {
+  inspect: (vehicle: T) => void;
 }

@@ -1,6 +1,6 @@
-export type Factory<
-  Ctor extends abstract new (...args: any[]) => unknown,
-> = (...args: ConstructorParameters<Ctor>) => InstanceType<Ctor>;
+export type Factory<Ctor extends new (...args: any[]) => unknown> = (
+  ...args: ConstructorParameters<Ctor>
+) => InstanceType<Ctor>;
 
 export class InspectionReport {
   constructor(
