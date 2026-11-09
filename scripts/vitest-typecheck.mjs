@@ -1,6 +1,6 @@
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { dirname, join, resolve } from "node:path";
+import { join, resolve } from "node:path";
 
 // Test discovery and TypeScript project membership are separate in Vitest.
 // Compile exactly the selected test files and their dependencies.
@@ -14,11 +14,6 @@ export async function setup(project) {
     )
   );
   if (!files.length) return;
-
-  const promptDirectory = resolve(root, "labs/bonus-prompt-api");
-  if (files.some(file => dirname(resolve(file)) === promptDirectory)) {
-    files.push(join(promptDirectory, "07-prompt-api.d.ts"));
-  }
 
   const directory = await mkdtemp(join(tmpdir(), "workshop-vitest-"));
   const tsconfig = join(directory, "tsconfig.json");
