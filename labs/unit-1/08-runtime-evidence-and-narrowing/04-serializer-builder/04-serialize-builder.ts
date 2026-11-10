@@ -5,17 +5,13 @@ export function createSerializers() {
     serializers[type] = fn;
   }
 
-  function serialize(value: unknown) {
-    return serializers[typeof value]?.(value as never) ?? "";
-  }
-
-  return { registerSerializer, serialize };
+  return { registerSerializer };
 }
 
 function numberSerializer(value: number) {
   return value.toFixed(2);
 }
 
-const { registerSerializer, serialize } = createSerializers();
+const { registerSerializer } = createSerializers();
 
 registerSerializer("number", numberSerializer);
