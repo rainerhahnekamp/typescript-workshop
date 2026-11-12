@@ -13,4 +13,24 @@ describe("mini zod", () => {
       (value: unknown) => { id: number; first: string; last: string }
     >();
   });
+
+  it("infers nested object schemas through z.object composition", () => {
+    const personSchema = z.object({
+      id: z.number(),
+      profile: z.object({
+        name: z.object({ first: z.string(), last: z.string() }),
+        joined: z.date(),
+      }),
+    });
+
+    expectTypeOf(personSchema.parse).toEqualTypeOf<
+      (value: unknown) => {
+        id: number;
+        profile: {
+          name: { first: string; last: string };
+          joined: Date;
+        };
+      }
+    >();
+  });
 });
