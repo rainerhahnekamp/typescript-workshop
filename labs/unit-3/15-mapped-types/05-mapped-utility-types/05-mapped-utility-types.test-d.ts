@@ -1,5 +1,8 @@
 import { describe, expectTypeOf, it } from "vitest";
-import type { PartialOptional, PartialReadOnly } from "./05-mapped-utility-types";
+import type {
+  PartialOptional,
+  PartialReadOnly,
+} from "./05-mapped-utility-types";
 
 type Person = {
   id: number;
@@ -7,6 +10,8 @@ type Person = {
   lastname: string;
   birthdate: Date;
 };
+
+type A = PartialReadOnly<Person, "id" | "firstname">;
 
 describe("utility types via mapped types", () => {
   it("should test PartialReadOnly", () => {
